@@ -50,7 +50,7 @@
 
     <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 md:p-12 border border-purple-200">
 
-        <!-- FORM CONTAINER: This holds the entire survey, visible by default -->
+        <!-- FORM CONTAINER -->
         <div id="formContainer" class="">
             <!-- Header Section -->
             <header class="mb-8 md:mb-10 text-center">
@@ -287,26 +287,6 @@
             </footer>
         </div>
         
-        <!-- SUCCESS PAGE CONTENT: Hidden by default, replaces the form after submission -->
-        <div id="successPage" class="hidden">
-            <div class="text-center py-10">
-                <div class="mb-6">
-                    <span class="text-6xl text-purple-600" role="img" aria-label="Sparkling Heart">💖✨</span>
-                </div>
-                <h2 class="text-3xl font-extrabold text-gray-800 mb-3">
-                    Thank You, FAN!
-                </h2>
-                <p class="text-gray-600 mb-8 max-w-md mx-auto text-lg">
-                    Your valuable feedback has been successfully recorded. We appreciate you taking the time to share your love for KATSEYE! You can now close this window, or start a new survey.
-                </p>
-                <!-- Button to simulate returning to the start page by reloading -->
-                <a href="#" onclick="window.location.reload();" class="inline-block py-3 px-8 border border-transparent rounded-lg text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.05]">
-                    Start a New Survey
-                </a>
-            </div>
-        </div>
-
-
     </div>
     
     <!-- JavaScript to handle form submission and data display -->
@@ -316,10 +296,6 @@
             const form = document.getElementById('surveyForm');
             const submitButton = document.getElementById('submitButton');
             const formError = document.getElementById('formError'); 
-            
-            // NEW: Get the main content containers
-            const formContainer = document.getElementById('formContainer');
-            const successPage = document.getElementById('successPage'); 
             
             form.addEventListener('submit', async (e) => {
                 // Prevent the default browser action (HTTP submission/page reload)
@@ -370,16 +346,11 @@
                 console.log("Collected Survey Data (Not saved to Firestore):");
                 console.log(JSON.stringify(results, null, 2));
 
-                // Simulate a slight delay for better UX before showing the success page
+                // Simulate a slight delay for better UX before redirecting
                 await new Promise(resolve => setTimeout(resolve, 500));
 
-                // 2. Hide the form container and show the success page container
-                formContainer.classList.add('hidden');
-                successPage.classList.remove('hidden');
-
-                // Re-enable button (though now hidden)
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Fan Message';
+                // 2. REDIRECT to the external thank you page
+                window.location.href = 'thank_you.html';
             });
             
         });
