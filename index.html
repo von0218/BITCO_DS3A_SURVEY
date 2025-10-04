@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KATSEYE Fandom Survey</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply Inter font globally and ensure smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f6f3ff; /* Light purple/lavender background */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Custom styling for the radio/checkbox focus state - using purple-600 */
+        input[type="radio"]:checked + label,
+        input[type="checkbox"]:checked + label {
+            border-color: #9333ea; /* Purple-600 */
+            background-color: #f3f4f6; /* Light gray for subtle highlight */
+            box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+        }
+
+        /* Hide the default input elements */
+        input[type="radio"],
+        input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* Custom styling for the label container */
+        .choice-label {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 md:p-12 border border-purple-200">
+
+        <!-- FORM CONTAINER: This holds the entire survey, visible by default -->
+        <div id="formContainer" class="">
+            <!-- Header Section -->
+            <header class="mb-8 md:mb-10 text-center">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-purple-800 mb-2">
+                    KATSEYE Fandom Check-In
+                </h1>
+                <p class="text-gray-500 text-lg">
+                    Share your favorite music, bias, and what you're excited for next!
+                </p>
+            </header>
+            
+            <!-- Survey Form -->
+            <form id="surveyForm" action="#" method="POST" class="space-y-8">
+                
+                <!-- Question 1: Bias Selection (Radio Buttons) -->
+                <div class="space-y-4">
+                    <label class="block text-xl font-semibold text-gray-700 mb-4">
+                        1. Who is your current **KATSEYE Bias**? (Select one)
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+                        <!-- Bias Options -->
+                        <div>
+                            <input type="radio" id="bias_daniela" name="bias" value="Daniela" required>
+                            <label for="bias_daniela" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Daniela">👑</span>
+                                Daniela
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="bias_lara" name="bias" value="Lara">
+                            <label for="bias_lara" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Lara">🎤</span>
+                                Lara
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="bias_manon" name="bias" value="Manon">
+                            <label for="bias_manon" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Manon">✨</span>
+                                Manon
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="bias_megan" name="bias" value="Megan">
+                            <label for="bias_megan" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Megan">🌟</span>
+                                Megan
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="bias_sophia" name="bias" value="Sophia">
+                            <label for="bias_sophia" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Sophia">💖</span>
+                                Sophia
+                            </label>
+                        </div>
+                        <div>
+                            <input type="radio" id="bias_yoonchae" name="bias" value="Yoonchae">
+                            <label for="bias_yoonchae" class="choice-label flex flex-col items-center justify-center p-3 sm:p-4 border-2 border-gray-200 rounded-lg text-sm sm:text-base hover:border-pink-500/50">
+                                <span class="text-2xl mb-1" role="img" aria-label="Yoonchae">💫</span>
+                                Yoonchae
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2: Favorite Song (Checkboxes) -->
+                <div class="space-y-4">
+                    <label class="block text-xl font-semibold text-gray-700 mb-4">
+                        2. Which **songs** from their discography are your current favorites? (Select exactly 5)
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                        <!-- Song Options - Expanded list -->
+                        <div>
+                            <input type="checkbox" id="song_1" name="favorite_song" value="Gabriela">
+                            <label for="song_1" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Microphone">🎤</span>
+                                <span class="font-medium text-gray-700">Gabriela</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_2" name="favorite_song" value="Gnarly">
+                            <label for="song_2" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Lightning Bolt">⚡</span>
+                                <span class="font-medium text-gray-700">Gnarly</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_3" name="favorite_song" value="Touch">
+                            <label for="song_3" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Star">⭐</span>
+                                <span class="font-medium text-gray-700">Touch</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_4" name="favorite_song" value="Debut">
+                            <label for="song_4" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Rocket">🚀</span>
+                                <span class="font-medium text-gray-700">Debut</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_5" name="favorite_song" value="Gameboy">
+                            <label for="song_5" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Game Controller">🕹️</span>
+                                <span class="font-medium text-gray-700">Gameboy</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <input type="checkbox" id="song_6" name="favorite_song" value="My Way">
+                            <label for="song_6" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Road">🛣️</span>
+                                <span class="font-medium text-gray-700">My Way</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_7" name="favorite_song" value="Mean Girls">
+                            <label for="song_7" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Nail Polish">💅</span>
+                                <span class="font-medium text-gray-700">Mean Girls</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_8" name="favorite_song" value="M.I.A.">
+                            <label for="song_8" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Shushing Face">🤫</span>
+                                <span class="font-medium text-gray-700">M.I.A.</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_9" name="favorite_song" value="I'm Pretty">
+                            <label for="song_9" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Sparkles">✨</span>
+                                <span class="font-medium text-gray-700">I'm Pretty</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="song_10" name="favorite_song" value="Tonight I Might">
+                            <label for="song_10" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Night Sky">🌙</span>
+                                <span class="font-medium text-gray-700">Tonight I Might</span>
+                            </label>
+                        </div>
+                        
+                        <!-- New Songs -->
+
+                        <div>
+                            <input type="checkbox" id="song_11" name="favorite_song" value="Touch (ft. YEONJUN of TXT)">
+                            <label for="song_11" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Star">⭐</span>
+                                <span class="font-medium text-gray-700">Touch (ft. YEONJUN of TXT)</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <input type="checkbox" id="song_12" name="favorite_song" value="Flame">
+                            <label for="song_12" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Fire">🔥</span>
+                                <span class="font-medium text-gray-700">Flame</span>
+                            </label>
+                        </div>
+                        
+                        <div>
+                            <input type="checkbox" id="song_13" name="favorite_song" value="Monster High Fright Song">
+                            <label for="song_13" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
+                                <span class="text-2xl mr-3" role="img" aria-label="Ghost">👻</span>
+                                <span class="font-medium text-gray-700">Monster High Fright Song</span>
+                            </label>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Question 3: Age (Number Input) -->
+                <div class="space-y-2">
+                    <label for="age" class="block text-xl font-semibold text-gray-700">
+                        3. Your Age (Required)
+                    </label>
+                    <input type="number" id="age" name="age" min="8" max="99" required class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="e.g., 22">
+                </div>
+
+                <!-- Question 4: Country (Text Input) -->
+                <div class="space-y-2">
+                    <label for="country" class="block text-xl font-semibold text-gray-700">
+                        4. Your Country
+                    </label>
+                    <input type="text" id="country" name="country" required class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="e.g., Philippines, USA, South Korea">
+                </div>
+
+                <!-- Question 5: Email (Text Input) - RE-ADDED & REQUIRED -->
+                <div class="space-y-2">
+                    <label for="email" class="block text-xl font-semibold text-gray-700">
+                        5. Your Email (Required)
+                    </label>
+                    <input type="email" id="email" name="email" required class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="your.fandom.email@example.com">
+                </div>
+
+                <!-- Question 6: Future Excitement (Textarea) - SHIFTED -->
+                <div class="space-y-2">
+                    <label for="future_excitement" class="block text-xl font-semibold text-gray-700">
+                        6. What are you most excited for in KATSEYE's future (e.g., world tour, album concept, variety show appearance)?
+                    </label>
+                    <textarea id="future_excitement" name="future_excitement" rows="5" class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="I can't wait for a full album and their first concert tour!"></textarea>
+                </div>
+
+                <!-- Error Message Display - Added for custom validation -->
+                <div id="formError" class="text-center py-2 px-4 rounded-lg bg-red-100 border border-red-400 text-red-700 mb-4 hidden" role="alert">
+                    <!-- Error message will be injected here -->
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button id="submitButton" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.01]">
+                        Submit Fan Message
+                    </button>
+                </div>
+
+            </form>
+
+            <!-- Footer -->
+            <footer class="mt-10 text-center text-sm text-gray-400">
+                Thank you for being a dedicated fan!
+            </footer>
+        </div>
+        
+        <!-- SUCCESS PAGE CONTENT: Hidden by default, replaces the form after submission -->
+        <div id="successPage" class="hidden">
+            <div class="text-center py-10">
+                <div class="mb-6">
+                    <span class="text-6xl text-purple-600" role="img" aria-label="Sparkling Heart">💖✨</span>
+                </div>
+                <h2 class="text-3xl font-extrabold text-gray-800 mb-3">
+                    Thank You, FAN!
+                </h2>
+                <p class="text-gray-600 mb-8 max-w-md mx-auto text-lg">
+                    Your valuable feedback has been successfully recorded. We appreciate you taking the time to share your love for KATSEYE! You can now close this window, or start a new survey.
+                </p>
+                <!-- Button to simulate returning to the start page by reloading -->
+                <a href="#" onclick="window.location.reload();" class="inline-block py-3 px-8 border border-transparent rounded-lg text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.05]">
+                    Start a New Survey
+                </a>
+            </div>
+        </div>
+
+
+    </div>
+    
+    <!-- JavaScript to handle form submission and data display -->
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('surveyForm');
+            const submitButton = document.getElementById('submitButton');
+            const formError = document.getElementById('formError'); 
+            
+            // NEW: Get the main content containers
+            const formContainer = document.getElementById('formContainer');
+            const successPage = document.getElementById('successPage'); 
+            
+            form.addEventListener('submit', async (e) => {
+                // Prevent the default browser action (HTTP submission/page reload)
+                e.preventDefault(); 
+                
+                // 1. Clear previous errors
+                formError.classList.add('hidden');
+                formError.textContent = '';
+                
+                // Disable button and show loading state
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+                
+                const formData = new FormData(form);
+                const results = {};
+
+                // Handle Favorite Songs (Checkboxes - multiple selections)
+                const favoriteSongs = [];
+                form.querySelectorAll('input[name="favorite_song"]:checked').forEach(checkbox => {
+                    favoriteSongs.push(checkbox.value);
+                });
+                
+                // --- Custom Validation Check: Must select exactly 5 songs ---
+                if (favoriteSongs.length !== 5) {
+                    formError.textContent = `Please select exactly 5 favorite songs. You currently have ${favoriteSongs.length} selected.`;
+                    formError.classList.remove('hidden');
+                    
+                    // Re-enable button immediately on validation failure
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Fan Message';
+                    // Scroll to the error message for better UX
+                    formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return; // Stop submission
+                }
+                // -----------------------------------------------------------------
+
+
+                // Collect all other inputs
+                for (const [key, value] of formData.entries()) {
+                    if (key !== 'favorite_song') {
+                        results[key] = value;
+                    }
+                }
+                results.favorite_songs = favoriteSongs;
+
+
+                // Log the collected data
+                console.log("Collected Survey Data (Not saved to Firestore):");
+                console.log(JSON.stringify(results, null, 2));
+
+                // Simulate a slight delay for better UX before showing the success page
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // 2. Hide the form container and show the success page container
+                formContainer.classList.add('hidden');
+                successPage.classList.remove('hidden');
+
+                // Re-enable button (though now hidden)
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Fan Message';
+            });
+            
+        });
+    </script>
+
+</body>
+</html>
