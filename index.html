@@ -6,9 +6,120 @@
     <title>KATSEYE Fandom Survey</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Inter font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        // Use a simple function to simulate user ID for the log entry
+        const getUserId = () => 'USER_' + Math.random().toString(36).substring(2, 9).toUpperCase();
+        const userId = getUserId();
+        
+        // Utility function to get UI elements
+        const getUIElements = () => ({
+            dbStatus: document.getElementById('dbStatus'),
+            currentUserId: document.getElementById('currentUserId'),
+            submitButton: document.getElementById('submitButton'),
+            formError: document.getElementById('formError'),
+            formContainer: document.getElementById('formContainer'),
+            successMessage: document.getElementById('successMessage')
+        });
+
+        // Utility function to update the status in the UI
+        const updateStatus = (elements, status, colorClass, ready) => {
+            if (elements.dbStatus) {
+                elements.dbStatus.textContent = status;
+                elements.dbStatus.className = 'font-semibold ' + colorClass;
+            }
+            if (elements.submitButton) {
+                if (ready) {
+                    elements.submitButton.disabled = false;
+                    // Apply active styling
+                    elements.submitButton.className = 'w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.01]';
+                } else {
+                    elements.submitButton.disabled = true;
+                    // Apply disabled styling
+                    elements.submitButton.className = 'w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-purple-400 cursor-not-allowed';
+                }
+            }
+        };
+
+        // Function to handle form submission, saving to localStorage, and redirect
+        const handleFormSubmission = (e) => {
+            e.preventDefault();
+            
+            const elements = getUIElements();
+            const form = document.getElementById('surveyForm');
+            const submitButton = elements.submitButton;
+            const formError = elements.formError;
+
+            // 1. Clear previous errors & show loading
+            formError.classList.add('hidden');
+            formError.textContent = '';
+            
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+
+            const formData = new FormData(form);
+            const results = {};
+
+            // Collect Favorite Songs
+            const favoriteSongs = [];
+            form.querySelectorAll('input[name="favorite_song"]:checked').forEach(checkbox => {
+                favoriteSongs.push(checkbox.value);
+            });
+            
+            // Validation Check: Must select exactly 5 songs
+            if (favoriteSongs.length !== 5) {
+                formError.textContent = `Please select exactly 5 favorite songs. You currently have ${favoriteSongs.length} selected.`;
+                formError.classList.remove('hidden');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+                updateStatus(elements, elements.dbStatus.textContent, 'text-blue-600', true);
+                formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Collect all other inputs
+            for (const [key, value] of formData.entries()) {
+                if (key !== 'favorite_song') {
+                    results[key] = value;
+                }
+            }
+            results.favorite_songs = favoriteSongs;
+            results.userId = userId;
+            results.timestamp = new Date().toISOString();
+            
+            // --- CORE FUNCTIONALITY: SAVE TO LOCAL STORAGE AND REDIRECT ---
+            // 1. Convert the results object to a JSON string.
+            const dataToStore = JSON.stringify(results);
+            
+            // 2. Save the data to localStorage.
+            localStorage.setItem('surveySubmissionData', dataToStore);
+
+            // 3. Immediately redirect. The new page will handle the console log.
+            window.location.href = 'thank_you.html';
+        };
+
+        // Initialize UI and attach event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = getUIElements();
+            
+            // Set initial UI state
+            if (elements.currentUserId) {
+                elements.currentUserId.textContent = userId;
+            }
+            updateStatus(elements, 'Console Logging Only', 'text-blue-600', true);
+
+            const form = document.getElementById('surveyForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmission);
+            }
+            
+            // Ensure the success message is hidden on load
+            if (elements.successMessage) {
+                elements.successMessage.classList.add('hidden');
+            }
+        });
+
+    </script>
     <style>
         /* Apply Inter font globally and ensure smooth scrolling */
         body {
@@ -28,8 +139,14 @@
             background-color: #f3f4f6; /* Light gray for subtle highlight */
             box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
         }
+        
+        input[type="radio"]:checked + label,
+        input[type="checkbox"]:checked + label,
+        .choice-label:hover {
+            transform: scale(1.02); /* Subtle scale effect on hover/check */
+        }
 
-        /* Hide the default input elements */
+        /* Hide the default input elements for custom styling */
         input[type="radio"],
         input[type="checkbox"] {
             position: absolute;
@@ -44,26 +161,33 @@
             cursor: pointer;
         }
 
+        .shadow-glow {
+            box-shadow: 0 0 20px rgba(147, 51, 234, 0.2);
+        }
     </style>
 </head>
 <body>
 
-    <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 md:p-12 border border-purple-200">
+    <div class="w-full max-w-3xl bg-white shadow-2xl rounded-xl p-8 md:p-12 border border-purple-200 shadow-glow">
+        
+        <!-- Header Section (Always Visible) -->
+        <header class="mb-8 md:mb-10 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-purple-800 mb-2">
+                KATSEYE Fandom Check-In
+            </h1>
+            <p class="text-gray-500 text-lg">
+                Share your favorite music, bias, and what you're excited for next!
+            </p>
+            <!-- Database Status and User ID display -->
+            <p class="mt-4 text-sm text-gray-400">
+                Data Handling: <span id="dbStatus" class="font-semibold text-blue-600">Console Logging Only</span> | 
+                Session ID: <span class="font-mono text-xs text-gray-500" id="currentUserId">Loading...</span>
+            </p>
+        </header>
 
-        <!-- FORM CONTAINER -->
-        <div id="formContainer" class="">
-            <!-- Header Section -->
-            <header class="mb-8 md:mb-10 text-center">
-                <h1 class="text-3xl md:text-4xl font-extrabold text-purple-800 mb-2">
-                    KATSEYE Fandom Check-In
-                </h1>
-                <p class="text-gray-500 text-lg">
-                    Share your favorite music, bias, and what you're excited for next!
-                </p>
-            </header>
-            
-            <!-- Survey Form -->
-            <form id="surveyForm" action="#" method="POST" class="space-y-8">
+        <!-- 1. SURVEY FORM CONTAINER (Visible initially) -->
+        <div id="formContainer">
+            <form id="surveyForm" class="space-y-8">
                 
                 <!-- Question 1: Bias Selection (Radio Buttons) -->
                 <div class="space-y-4">
@@ -121,7 +245,7 @@
                 <!-- Question 2: Favorite Song (Checkboxes) -->
                 <div class="space-y-4">
                     <label class="block text-xl font-semibold text-gray-700 mb-4">
-                        2. Which **songs** from their discography are your current favorites? (Select exactly 5)
+                        2. Which **songs** from their discography are your current favorites? (<span class="text-red-500 font-bold">Select exactly 5</span>)
                     </label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
@@ -133,7 +257,6 @@
                                 <span class="font-medium text-gray-700">Gabriela</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_2" name="favorite_song" value="Gnarly">
                             <label for="song_2" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -141,7 +264,6 @@
                                 <span class="font-medium text-gray-700">Gnarly</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_3" name="favorite_song" value="Touch">
                             <label for="song_3" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -149,7 +271,6 @@
                                 <span class="font-medium text-gray-700">Touch</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_4" name="favorite_song" value="Debut">
                             <label for="song_4" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -157,7 +278,6 @@
                                 <span class="font-medium text-gray-700">Debut</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_5" name="favorite_song" value="Gameboy">
                             <label for="song_5" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -165,7 +285,6 @@
                                 <span class="font-medium text-gray-700">Gameboy</span>
                             </label>
                         </div>
-                        
                         <div>
                             <input type="checkbox" id="song_6" name="favorite_song" value="My Way">
                             <label for="song_6" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -173,7 +292,6 @@
                                 <span class="font-medium text-gray-700">My Way</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_7" name="favorite_song" value="Mean Girls">
                             <label for="song_7" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -181,7 +299,6 @@
                                 <span class="font-medium text-gray-700">Mean Girls</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_8" name="favorite_song" value="M.I.A.">
                             <label for="song_8" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -189,7 +306,6 @@
                                 <span class="font-medium text-gray-700">M.I.A.</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_9" name="favorite_song" value="I'm Pretty">
                             <label for="song_9" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -197,7 +313,6 @@
                                 <span class="font-medium text-gray-700">I'm Pretty</span>
                             </label>
                         </div>
-
                         <div>
                             <input type="checkbox" id="song_10" name="favorite_song" value="Tonight I Might">
                             <label for="song_10" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -205,9 +320,6 @@
                                 <span class="font-medium text-gray-700">Tonight I Might</span>
                             </label>
                         </div>
-                        
-                        <!-- New Songs -->
-
                         <div>
                             <input type="checkbox" id="song_11" name="favorite_song" value="Touch (ft. YEONJUN of TXT)">
                             <label for="song_11" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -215,7 +327,6 @@
                                 <span class="font-medium text-gray-700">Touch (ft. YEONJUN of TXT)</span>
                             </label>
                         </div>
-                        
                         <div>
                             <input type="checkbox" id="song_12" name="favorite_song" value="Flame">
                             <label for="song_12" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -223,7 +334,6 @@
                                 <span class="font-medium text-gray-700">Flame</span>
                             </label>
                         </div>
-                        
                         <div>
                             <input type="checkbox" id="song_13" name="favorite_song" value="Monster High Fright Song">
                             <label for="song_13" class="choice-label flex items-center p-4 border-2 border-gray-200 rounded-lg hover:border-purple-400">
@@ -246,12 +356,12 @@
                 <!-- Question 4: Country (Text Input) -->
                 <div class="space-y-2">
                     <label for="country" class="block text-xl font-semibold text-gray-700">
-                        4. Your Country
+                        4. Your Country 
                     </label>
                     <input type="text" id="country" name="country" required class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="e.g., Philippines, USA, South Korea">
                 </div>
 
-                <!-- Question 5: Email (Text Input) - RE-ADDED & REQUIRED -->
+                <!-- Question 5: Email (Text Input) -->
                 <div class="space-y-2">
                     <label for="email" class="block text-xl font-semibold text-gray-700">
                         5. Your Email (Required)
@@ -259,7 +369,7 @@
                     <input type="email" id="email" name="email" required class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="your.fandom.email@example.com">
                 </div>
 
-                <!-- Question 6: Future Excitement (Textarea) - SHIFTED -->
+                <!-- Question 6: Future Excitement (Textarea) -->
                 <div class="space-y-2">
                     <label for="future_excitement" class="block text-xl font-semibold text-gray-700">
                         6. What are you most excited for in KATSEYE's future (e.g., world tour, album concept, variety show appearance)?
@@ -267,95 +377,37 @@
                     <textarea id="future_excitement" name="future_excitement" rows="5" class="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-lg border-gray-300 rounded-lg p-3 placeholder-gray-400" placeholder="I can't wait for a full album and their first concert tour!"></textarea>
                 </div>
 
-                <!-- Error Message Display - Added for custom validation -->
-                <div id="formError" class="text-center py-2 px-4 rounded-lg bg-red-100 border border-red-400 text-red-700 mb-4 hidden" role="alert">
+                <!-- Error Message Display -->
+                <div id="formError" class="text-center py-3 px-4 rounded-lg bg-red-100 border border-red-400 text-red-700 mb-4 hidden" role="alert">
                     <!-- Error message will be injected here -->
                 </div>
 
                 <!-- Submit Button -->
                 <div>
                     <button id="submitButton" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-lg font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.01]">
-                        Submit Fan Message
+                        Submit
                     </button>
                 </div>
 
+                <!-- Footer -->
+                <footer class="mt-10 text-center text-sm text-gray-400">
+                    Thank you for being a dedicated fan!
+                </footer>
             </form>
-
-            <!-- Footer -->
-            <footer class="mt-10 text-center text-sm text-gray-400">
-                Thank you for being a dedicated fan!
-            </footer>
         </div>
-        
+
+        <!-- 2. SUCCESS CONFIRMATION CONTAINER (Hidden initially) - No longer used for display, but kept for safe measures. -->
+        <div id="successMessage" class="hidden text-center py-10 md:py-16">
+            <svg class="mx-auto h-20 w-20 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2 class="text-3xl font-extrabold text-purple-800 mt-4 mb-2">
+                Submission Successful!
+            </h2>
+            <p class="text-xl text-gray-600 mb-6">
+                Your data has been successfully logged to the **developer console**.
+            </p>
+        </div>
     </div>
-    
-    <!-- JavaScript to handle form submission and data display -->
-    <script>
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('surveyForm');
-            const submitButton = document.getElementById('submitButton');
-            const formError = document.getElementById('formError'); 
-            
-            form.addEventListener('submit', async (e) => {
-                // Prevent the default browser action (HTTP submission/page reload)
-                e.preventDefault(); 
-                
-                // 1. Clear previous errors
-                formError.classList.add('hidden');
-                formError.textContent = '';
-                
-                // Disable button and show loading state
-                submitButton.disabled = true;
-                submitButton.textContent = 'Submitting...';
-                
-                const formData = new FormData(form);
-                const results = {};
-
-                // Handle Favorite Songs (Checkboxes - multiple selections)
-                const favoriteSongs = [];
-                form.querySelectorAll('input[name="favorite_song"]:checked').forEach(checkbox => {
-                    favoriteSongs.push(checkbox.value);
-                });
-                
-                // --- Custom Validation Check: Must select exactly 5 songs ---
-                if (favoriteSongs.length !== 5) {
-                    formError.textContent = `Please select exactly 5 favorite songs. You currently have ${favoriteSongs.length} selected.`;
-                    formError.classList.remove('hidden');
-                    
-                    // Re-enable button immediately on validation failure
-                    submitButton.disabled = false;
-                    submitButton.textContent = 'Submit';
-                    // Scroll to the error message for better UX
-                    formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return; // Stop submission
-                }
-                // -----------------------------------------------------------------
-
-
-                // Collect all other inputs
-                for (const [key, value] of formData.entries()) {
-                    if (key !== 'favorite_song') {
-                        results[key] = value;
-                    }
-                }
-                results.favorite_songs = favoriteSongs;
-
-
-                // Log the collected data
-                console.log("Collected Survey Data (Not saved to Firestore):");
-                console.log(JSON.stringify(results, null, 2));
-
-                // Simulate a slight delay for better UX before redirecting
-                await new Promise(resolve => setTimeout(resolve, 500));
-
-                // 2. REDIRECT to the external thank you page
-                window.location.href = 'thank_you.html';
-            });
-            
-        });
-    </script>
-
 </body>
 </html>
-
