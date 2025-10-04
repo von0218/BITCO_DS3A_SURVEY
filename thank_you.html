@@ -3,51 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KATSEYE | Thank You!</title>
+    <title>Thank You, Fan!</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Load Inter font (CORRECTED) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const storedData = localStorage.getItem('surveySubmissionData');
+            
+            if (storedData) {
+                try {
+                    // Parse the JSON string back into a JavaScript object
+                    const submissionData = JSON.parse(storedData);
+                    
+                    // --- CORE FUNCTIONALITY: LOG TO CONSOLE (This will now persist!) ---
+                    console.log("SURVEY LOG: New KATSEYE Submission");
+                    // Log the object so it can be expanded just like in your example picture
+                    console.log(submissionData);
+                    console.log("-----------------------------------------------------");
+
+                    // Clean up: Remove the data so it doesn't log every time the user visits this page later
+                    localStorage.removeItem('surveySubmissionData');
+
+                } catch (error) {
+                    // Log error to console if data is corrupted
+                    console.error("Error parsing stored submission data. Data cleared from storage.", error);
+                    
+                    // Still remove corrupted data to prevent repeat errors
+                    localStorage.removeItem('surveySubmissionData');
+                }
+            } else {
+                console.log("INFO: No new survey data found in local storage to log.");
+            }
+        });
+    </script>
     <style>
-        /* Apply Inter font globally and set background/centering */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f6f3ff; /* Light purple/lavender background */
+            background-color: #f6f3ff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
             padding: 20px;
+        }
+        .shadow-glow {
+            box-shadow: 0 0 30px rgba(147, 51, 234, 0.4);
         }
     </style>
 </head>
 <body>
-
-    <!-- Changed max-w-xl to max-w-2xl for a wider container and increased padding from p-16 to p-20 -->
-    <div class="max-w-2xl bg-white shadow-2xl rounded-xl p-10 md:p-20 border border-purple-200">
-        
-        <!-- GIF Section: Removed fixed height (h-96) so the border fits the content's aspect ratio (w-full ensures it's still big) -->
-        <div class="mb-8 flex justify-center w-full">
-            <img src="katseye.gif" 
-                 alt="KATSEYE fan GIF for successful submission" 
-                 class="rounded-xl w-full object-contain shadow-xl border-4 border-purple-300"
-                 onerror="this.onerror=null; this.src='https://placehold.co/400x300/cccccc/000000?text=Check+File+Name';">
+    <div class="w-full max-w-xl bg-white shadow-2xl rounded-xl p-10 md:p-16 border border-purple-300 shadow-glow text-center">
+        <!-- KATSEYE Placeholder Image -->
+        <div class="mx-auto w-full max-w-xs mb-8 rounded-lg overflow-hidden">
+            <img src="katseye.gif" alt="KATSEYE group image placeholder" class="w-full h-auto object-cover">
         </div>
-        
-        <!-- Updated text and color to purple-700 -->
-        <h1 class="text-4xl font-extrabold text-purple-700 mb-6">
+
+        <h1 class="text-4xl font-extrabold text-purple-800 mb-4">
             Welcome to the KATSEYE Fandom!
         </h1>
-        <!-- Increased paragraph size from text-xl to text-2xl for impact and more margin below -->
-        <p class="text-2xl text-gray-600 mb-10">
-            Thank you for supporting the newest global girl group! Your responses have been successfully recorded. Get ready for the debut!
+        <p class="text-xl text-gray-600 mb-8">
+            Thank you for supporting the newest global girl group! Your responses have been successfully recorded.
         </p>
-        <!-- Updated button text to "Start a New Survey" -->
-        <a href="index.html" class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-lg shadow-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition ease-in-out duration-150 transform hover:scale-[1.01]">
-            Start a New Survey
-        </a>
+        <div class="text-lg text-gray-700 bg-purple-100 p-4 rounded-lg border border-purple-300 inline-block">
+            ✅ **Confirmation:** This page successfully logged your submission data to the **Developer Console**.
+        </div>
+        <div class="mt-10">
+            <!-- UPDATED: Changed href from KATSEYE_Survey.html to index.html -->
+            <a href="index.html" class="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-lg text-base font-medium text-white bg-pink-500 hover:bg-pink-600 transition duration-150">
+                Make New Survey
+            </a>
+        </div>
     </div>
-
 </body>
 </html>
